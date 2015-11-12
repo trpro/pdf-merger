@@ -1,13 +1,17 @@
 {
-    "name": "clegginabox/pdf-merger",
-    "description": "PDF File Merger for PHP5",
+    "name": "hpolthof/pdf-merger",
+    "description": "PDF File Merger for PHP5, for usage with SetAsign FPDI.",
     "require": {
-        "itbz/fpdi": "dev-master"
+        "setasign/fpdi-fpdf": "~1.6"
     },
     "authors": [
         {
             "name": "Paul Clegg",
             "email": "paul@clegginabox.co.uk"
+        },
+        {
+            "name": "Paul Olthof",
+            "email": "hpolthof@gmail.com"
         }
     ],
     "autoload": {
