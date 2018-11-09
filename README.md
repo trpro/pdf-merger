@@ -1,20 +1,16 @@
-#PDFMerger for PHP (PHP 5 Compatible)
+# PDFMerger for PHP (PHP 5 amd 7 Compatible)
 
 Original written by http://pdfmerger.codeplex.com/team/view<br />
-Forked from https://github.com/myokyawhtun/PDFMerger
+Forked from https://github.com/hpolthof/pdf-merger which forked from https://github.com/clegginabox/pdf-merger which forked from https://github.com/myokyawhtun/PDFMerger
 
-## Composer Compatible
+# What's different from the other forks
 
-I've just forked this package to make it compatible with composer
-
-To install add this line to your composer.json
-
-```"clegginabox/pdf-merger": "dev-master"```
+This has up an up to date version of `setasign/fpdi-fpdf` as older versions have code not compatible with PHP 7. Thank you to all the previous forks for allowing an easy upgrade.  
 
 ### Example Usage
 ```php
 
-$pdf = new \Clegginabox\PDFMerger\PDFMerger;
+$pdf = new \Mayden\PDFMerger\PDFMerger;
 
 $pdf->addPDF('samplepdfs/one.pdf', '1, 3, 4');
 $pdf->addPDF('samplepdfs/two.pdf', '1-2');
