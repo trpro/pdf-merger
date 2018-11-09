@@ -21,7 +21,7 @@
  * such as form fields, links or page annotations (anything not a part of the page content stream).
  *
  */
-namespace Hpolthof\PDFMerger;
+namespace Mayden\PDFMerger;
 
 use Exception;
 use FPDI;

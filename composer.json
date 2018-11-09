@@ -1,6 +1,7 @@
 {
-    "name": "hpolthof/pdf-merger",
-    "description": "PDF File Merger for PHP5, for usage with SetAsign FPDI.",
+    "name": "may-den/pdf-merger",
+    "description": "PDF File Merger for PHP 5 & 7, for usage with SetAsign FPDI.",
+    "version": "2.0.1",
     "require": {
         "setasign/fpdi-fpdf": "^2"
     },
