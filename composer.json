@@ -2,7 +2,7 @@
     "name": "hpolthof/pdf-merger",
     "description": "PDF File Merger for PHP5, for usage with SetAsign FPDI.",
     "require": {
-        "setasign/fpdi-fpdf": "~1.6"
+        "setasign/fpdi-fpdf": "^2"
     },
     "authors": [
         {
