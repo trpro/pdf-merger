@@ -28,6 +28,10 @@ local.properties
 # PDT-specific
 .buildpath
 
+#################
+## PHP Storm
+#################
+.idea
 
 #################
 ## Visual Studio

@@ -25,18 +25,19 @@ namespace Mayden\PDFMerger;
 
 use Exception;
 use setasign\Fpdi\Fpdi as FPDI;
-use FPDF;
+//use FPDF;
 
 class PDFMerger
 {
     private $_files;    //['form.pdf']  ["1,2,4, 5-19"]
-    private $_fpdi;
 
     /**
      * Add a PDF for inclusion in the merge with a valid file path. Pages should be formatted: 1,3,6, 12-16.
      * @param $filepath
      * @param $pages
-     * @return void
+     * @param $orientation
+     * @return PDFMerger
+     * @throws Exception
      */
     public function addPDF($filepath, $pages = 'all', $orientation = null)
     {
@@ -56,9 +57,10 @@ class PDFMerger
     /**
      * Merges your provided PDFs and outputs to specified location.
      * @param $outputmode
-     * @param $outputname
+     * @param $outputpath
      * @param $orientation
-     * @return PDF
+     * @return string|boolean
+     * @throws \Exception
      */
     public function merge($outputmode = 'browser', $outputpath = 'newfile.pdf', $orientation = 'P')
     {
@@ -82,6 +84,13 @@ class PDFMerger
                     $template   = $fpdi->importPage($i);
                     $size       = $fpdi->getTemplateSize($template);
 
+                    if($orientation == 'A'){
+                        if($size['width'] > $size['height']){
+                            $fileorientation = 'L';
+                        } else {
+                            $fileorientation = 'P';
+                        }
+                    }
                     $fpdi->AddPage($fileorientation, array($size['width'], $size['height']));
                     $fpdi->useTemplate($template);
                 }
@@ -91,6 +100,14 @@ class PDFMerger
                         throw new Exception("Could not load page '$page' in PDF '$filename'. Check that the page exists.");
                     }
                     $size = $fpdi->getTemplateSize($template);
+
+                    if($orientation == 'A'){
+                        if($size['width'] > $size['height']){
+                            $fileorientation = 'L';
+                        } else {
+                            $fileorientation = 'P';
+                        }
+                    }
 
                     $fpdi->AddPage($fileorientation, array($size['w'], $size['h']));
                     $fpdi->useTemplate($template);
@@ -108,7 +125,6 @@ class PDFMerger
                 return true;
             } else {
                 throw new Exception("Error outputting PDF to '$outputmode'.");
-                return false;
             }
         }
 
@@ -118,7 +134,7 @@ class PDFMerger
     /**
      * FPDI uses single characters for specifying the output location. Change our more descriptive string into proper format.
      * @param $mode
-     * @return Character
+     * @return string
      */
     private function _switchmode($mode)
     {
@@ -145,12 +161,15 @@ class PDFMerger
     /**
      * Takes our provided pages in the form of 1,3,4,16-50 and creates an array of all pages
      * @param $pages
-     * @return unknown_type
+     * @return array
+     * @throws Exception
      */
     private function _rewritepages($pages)
     {
         $pages = str_replace(' ', '', $pages);
         $part = explode(',', $pages);
+
+        $newpages = [];
 
         //parse hyphens
         foreach ($part as $i) {
@@ -162,7 +181,6 @@ class PDFMerger
 
                 if ($x > $y) {
                     throw new Exception("Starting page, '$x' is greater than ending page '$y'.");
-                    return false;
                 }
 
                 //add middle pages
