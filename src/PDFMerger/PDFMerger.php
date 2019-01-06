@@ -21,7 +21,7 @@
  * such as form fields, links or page annotations (anything not a part of the page content stream).
  *
  */
-namespace Mayden\PDFMerger;
+namespace trpro\PDFMerger;
 
 use Exception;
 use setasign\Fpdi\Fpdi as FPDI;

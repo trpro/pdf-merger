@@ -7,21 +7,13 @@
     },
     "authors": [
         {
-            "name": "Paul Clegg",
-            "email": "paul@clegginabox.co.uk"
-        },
-        {
-            "name": "Paul Olthof",
-            "email": "hpolthof@gmail.com"
-        },
-        {
             "name": "Tr Pro",
             "email": "trpro@gmx.de"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Mayden\\PDFMerger\\": "src/PDFMerger/"
+            "trpro\\PDFMerger\\": "src/PDFMerger/"
         }
     }
 }

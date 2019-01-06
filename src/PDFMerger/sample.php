@@ -1,7 +1,7 @@
 <?php
-include 'PDFMerger.php';
+include __DIR__."/../../vendor/autoload.php";
 
-$pdf = new PDFMerger;
+$pdf = new trpro\PDFMerger\PDFMerger;
 
 $pdf->addPDF('samplepdfs/one.pdf', '1, 3, 4')
 	->addPDF('samplepdfs/two.pdf', '1-2')
