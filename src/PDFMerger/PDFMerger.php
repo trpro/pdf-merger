@@ -24,12 +24,17 @@
 namespace trpro\PDFMerger;
 
 use Exception;
-use setasign\Fpdi\Fpdi as FPDI;
+use setasign\Fpdi\Tcpdf\Fpdi as FPDI;
 //use FPDF;
 
 class PDFMerger
 {
     private $_files;    //['form.pdf']  ["1,2,4, 5-19"]
+
+    /**
+     * @var bool
+     */
+    private $_toc = false;
 
     /**
      * Add a PDF for inclusion in the merge with a valid file path. Pages should be formatted: 1,3,6, 12-16.
@@ -39,14 +44,14 @@ class PDFMerger
      * @return PDFMerger
      * @throws Exception
      */
-    public function addPDF($filepath, $pages = 'all', $orientation = null)
+    public function addPDF($filepath, $pages = 'all', $orientation = null, $description = null)
     {
         if (file_exists($filepath)) {
             if (strtolower($pages) != 'all') {
                 $pages = $this->_rewritepages($pages);
             }
 
-            $this->_files[] = array($filepath, $pages, $orientation);
+            $this->_files[] = array($filepath, $pages, $orientation, $description);
         } else {
             throw new Exception("Could not locate PDF on '$filepath'");
         }
@@ -69,12 +74,17 @@ class PDFMerger
         }
 
         $fpdi = new FPDI;
+        $fpdi->setPrintHeader(false);
+
 
         // merger operations
         foreach ($this->_files as $file) {
             $filename  = $file[0];
             $filepages = $file[1];
             $fileorientation = (!is_null($file[2])) ? $file[2] : $orientation;
+            $BookmarkDesc = !is_null($file[3]) ? $file[3] : $file[0];
+
+            $bookmarkInserted = false;
 
             $count = $fpdi->setSourceFile($filename);
 
@@ -92,6 +102,10 @@ class PDFMerger
                         }
                     }
                     $fpdi->AddPage($fileorientation, array($size['width'], $size['height']));
+                    if($this->_toc && !$bookmarkInserted) {
+                        $bookmarkInserted = true;
+                        $fpdi->Bookmark($BookmarkDesc, 0 /*, 0, '', '', array(0,64,128)*/);
+                    }
                     $fpdi->useTemplate($template);
                 }
             } else {
@@ -110,9 +124,27 @@ class PDFMerger
                     }
 
                     $fpdi->AddPage($fileorientation, array($size['w'], $size['h']));
+                    if($this->_toc && !$bookmarkInserted) {
+                        $bookmarkInserted = true;
+                        $fpdi->Bookmark($BookmarkDesc, 0 /*, 0, '', '', array(0,64,128)*/);
+                    }
                     $fpdi->useTemplate($template);
                 }
             }
+        }
+
+        if($this->_toc) {
+            $fpdi->addTOCPage('P');
+
+            $fpdi->SetFont('helvetica', 'B', 14);
+            $fpdi->MultiCell(0, 0, 'Table of Contents', 0, 'C', 0, 1, '', '', true, 0);
+            $fpdi->Ln();
+            $fpdi->SetFont('helvetica', 'B', 8);
+            $fpdi->MultiCell(0, 0, 'Date: ' . date("d.m.Y"), 0, 'C', 0, 1, '', '', true, 0);
+            $fpdi->Ln();
+
+            $fpdi->addTOC(1, 'helvetica', '.', 'INDEX', '', array(128, 0, 0));
+            $fpdi->endTOCPage();
         }
 
         //output operations
@@ -194,5 +226,16 @@ class PDFMerger
         }
 
         return $newpages;
+    }
+
+    /**
+     * @param bool $toc
+     * @return $this
+     */
+    public function enableTOC($toc = true)
+    {
+        $this->_toc = $toc;
+
+        return $this;
     }
 }

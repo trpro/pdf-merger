@@ -167,4 +167,3 @@ pip-log.txt
 .DS_Store
 
 /vendor/
-composer.lock
